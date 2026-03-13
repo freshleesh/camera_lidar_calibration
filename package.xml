@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>extrinsic_calibration_by_hand_cpp</name>
+  <name>camera_lidar_calibration</name>
   <version>0.0.0</version>
   <description>
     Interactive camera-LiDAR extrinsic calibration tool with real-time

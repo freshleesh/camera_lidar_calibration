@@ -25,7 +25,7 @@
 #include <tuple>
 #include <vector>
 
-namespace extrinsic_calibration_by_hand_cpp
+namespace camera_lidar_calibration
 {
 
 class ExtrinsicCalibrationNode : public rclcpp::Node
@@ -107,4 +107,4 @@ private:
   std::thread stdin_thread_;
 };
 
-}  // namespace extrinsic_calibration_by_hand_cpp
+}  // namespace camera_lidar_calibration

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(extrinsic_calibration_by_hand_cpp)
+project(camera_lidar_calibration)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -25,12 +25,12 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(yaml-cpp REQUIRED)
 
 # ── Target ────────────────────────────────────────────────────────────────────
-add_executable(extrinsic_calibration_by_hand_cpp
+add_executable(camera_lidar_calibration
   src/node.cpp
   src/main.cpp
 )
 
-target_include_directories(extrinsic_calibration_by_hand_cpp
+target_include_directories(camera_lidar_calibration
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -38,7 +38,7 @@ target_include_directories(extrinsic_calibration_by_hand_cpp
     ${OpenCV_INCLUDE_DIRS}
 )
 
-ament_target_dependencies(extrinsic_calibration_by_hand_cpp
+ament_target_dependencies(camera_lidar_calibration
   rclcpp
   sensor_msgs
   std_msgs
@@ -47,19 +47,19 @@ ament_target_dependencies(extrinsic_calibration_by_hand_cpp
   image_transport
 )
 
-target_link_libraries(extrinsic_calibration_by_hand_cpp
+target_link_libraries(camera_lidar_calibration
   ${PCL_LIBRARIES}
   ${OpenCV_LIBS}
   Eigen3::Eigen
   yaml-cpp
 )
 
-target_compile_definitions(extrinsic_calibration_by_hand_cpp
+target_compile_definitions(camera_lidar_calibration
   PRIVATE ${PCL_DEFINITIONS}
 )
 
 # ── Install ───────────────────────────────────────────────────────────────────
-install(TARGETS extrinsic_calibration_by_hand_cpp
+install(TARGETS camera_lidar_calibration
   DESTINATION lib/${PROJECT_NAME}
 )
 

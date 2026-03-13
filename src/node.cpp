@@ -1,4 +1,4 @@
-#include "extrinsic_calibration_by_hand_cpp/node.hpp"
+#include "camera_lidar_calibration/node.hpp"
 
 #include <rcl_interfaces/msg/floating_point_range.hpp>
 #include <rcl_interfaces/msg/integer_range.hpp>
@@ -20,7 +20,7 @@
 #include <set>
 #include <sstream>
 
-namespace extrinsic_calibration_by_hand_cpp
+namespace camera_lidar_calibration
 {
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -751,4 +751,4 @@ void ExtrinsicCalibrationNode::drawOverlay(
   }
 }
 
-}  // namespace extrinsic_calibration_by_hand_cpp
+}  // namespace camera_lidar_calibration

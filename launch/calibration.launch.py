@@ -5,16 +5,16 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('extrinsic_calibration_by_hand_cpp')
-    source_config_dir = '/ros2_ws/src/extrinsic_calibration_by_hand_cpp/config'
+    pkg_share = get_package_share_directory('camera_lidar_calibration')
+    source_config_dir = '/ros2_ws/src/camera_lidar_calibration/config'
     general_file = os.path.join(source_config_dir, 'general.yaml')
     params_file = os.path.join(source_config_dir, 'params.yaml')
     intrinsic_file = os.path.join(source_config_dir, 'camera_intrinsic_calibration.yaml')
     extrinsic_file = os.path.join(source_config_dir, 'camera_extrinsic_calibration.yaml')
 
     node = Node(
-        package='extrinsic_calibration_by_hand_cpp',
-        executable='extrinsic_calibration_by_hand_cpp',
+        package='camera_lidar_calibration',
+        executable='camera_lidar_calibration',
         name='extrinsic_calibration_by_hand',
         output='screen',
         parameters=[
