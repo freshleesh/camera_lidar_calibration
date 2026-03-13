@@ -22,7 +22,6 @@
 #include <optional>
 #include <string>
 #include <thread>
-#include <tuple>
 #include <vector>
 
 namespace camera_lidar_calibration
@@ -37,14 +36,11 @@ public:
 private:
   // ── Calibration loading ──────────────────────────────────────────────────
   void loadCameraIntrinsics(const std::string & yaml_path);
-  void loadAndInitExtrinsicParams(const std::string & yaml_path);
 
   // ── Parameter helpers ────────────────────────────────────────────────────
   rcl_interfaces::msg::SetParametersResult onParamsChanged(
     const std::vector<rclcpp::Parameter> & params);
   void updateExtrinsic();
-  std::tuple<double, double, double> rotMatToEulerDeg(
-    const Eigen::Matrix3d & R) const;
   Eigen::Matrix4d buildExtrinsicMatrix(
     double x, double y, double z,
     double roll_deg, double pitch_deg, double yaw_deg) const;

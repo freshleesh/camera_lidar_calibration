@@ -66,7 +66,6 @@ ExtrinsicCalibrationNode::ExtrinsicCalibrationNode(
   declare_parameter("lidar_topic",           "/livox/lidar");
   declare_parameter("debug_topic",           "/extrinsic_debug_image");
   declare_parameter("camera_intrinsic_yaml", "");
-  declare_parameter("camera_extrinsic_yaml", "");
   declare_parameter("save_on_enter", true);
   declare_parameter("save_general_yaml", "");
   declare_parameter("save_params_yaml", "");
@@ -75,9 +74,14 @@ ExtrinsicCalibrationNode::ExtrinsicCalibrationNode(
   const auto intrinsic_path = get_parameter("camera_intrinsic_yaml").as_string();
   loadCameraIntrinsics(intrinsic_path);
 
-  // ── Load extrinsic yaml → declare dynamic euler+translation params ───────
-  const auto extrinsic_path = get_parameter("camera_extrinsic_yaml").as_string();
-  loadAndInitExtrinsicParams(extrinsic_path);
+  // ── Core extrinsic parameters (overridden by YAML params file at launch) ──
+  declare_parameter("x", 0.006253, fp_desc("Translation X (m)", -5.0, 5.0));
+  declare_parameter("y", -0.018056, fp_desc("Translation Y (m)", -5.0, 5.0));
+  declare_parameter("z", -0.114992, fp_desc("Translation Z (m)", -5.0, 5.0));
+  declare_parameter("roll", 126.295327, fp_desc("Rotation Roll  (deg)", -180.0, 180.0));
+  declare_parameter("pitch", -88.042738, fp_desc("Rotation Pitch (deg)", -180.0, 180.0));
+  declare_parameter("yaw", -33.329511, fp_desc("Rotation Yaw   (deg)", -180.0, 180.0));
+  declare_parameter("cy", camera_matrix_.at<double>(1, 2), fp_desc("Principal point cy (px)", 0.0, 2000.0));
 
   // ── ROI parameters (LiDAR frame, metres) ─────────────────────────────────
   declare_parameter("roi_x_min", -20.0, fp_desc("ROI min X (m)", -100.0,   0.0));
@@ -161,59 +165,6 @@ void ExtrinsicCalibrationNode::loadCameraIntrinsics(const std::string & yaml_pat
   }
 
   RCLCPP_INFO(get_logger(), "Camera matrix loaded from: %s", yaml_path.c_str());
-}
-
-void ExtrinsicCalibrationNode::loadAndInitExtrinsicParams(
-  const std::string & yaml_path)
-{
-  YAML::Node cfg = YAML::LoadFile(yaml_path);
-  const auto rows = cfg["extrinsic_matrix"].as<std::vector<std::vector<double>>>();
-
-  Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
-      T(i, j) = rows[i][j];
-    }
-  }
-
-  const Eigen::Matrix3d R = T.block<3, 3>(0, 0);
-  const Eigen::Vector3d t = T.block<3, 1>(0, 3);
-
-  auto [roll, pitch, yaw] = rotMatToEulerDeg(R);
-  const double cy0 = camera_matrix_.at<double>(1, 2);
-
-  declare_parameter("x",     t(0), fp_desc("Translation X (m)",    -5.0,   5.0));
-  declare_parameter("y",     t(1), fp_desc("Translation Y (m)",    -5.0,   5.0));
-  declare_parameter("z",     t(2), fp_desc("Translation Z (m)",    -5.0,   5.0));
-  declare_parameter("roll",  roll,  fp_desc("Rotation Roll  (deg)", -180.0, 180.0));
-  declare_parameter("pitch", pitch, fp_desc("Rotation Pitch (deg)", -180.0, 180.0));
-  declare_parameter("yaw",   yaw,   fp_desc("Rotation Yaw   (deg)", -180.0, 180.0));
-  declare_parameter("cy",    cy0,   fp_desc("Principal point cy (px)", 0.0, 2000.0));
-
-  RCLCPP_INFO(get_logger(),
-    "Initial extrinsic: x=%.4f y=%.4f z=%.4f roll=%.4f pitch=%.4f yaw=%.4f",
-    t(0), t(1), t(2), roll, pitch, yaw);
-}
-
-// ──────────────────────────────────────────────────────────────────────────────
-// Math helpers
-// ──────────────────────────────────────────────────────────────────────────────
-std::tuple<double, double, double> ExtrinsicCalibrationNode::rotMatToEulerDeg(
-  const Eigen::Matrix3d & R) const
-{
-  const double sy = std::sqrt(R(0, 0) * R(0, 0) + R(1, 0) * R(1, 0));
-  double roll, pitch, yaw;
-  if (sy > 1e-6) {
-    roll  = std::atan2(R(2, 1), R(2, 2));
-    pitch = std::atan2(-R(2, 0), sy);
-    yaw   = std::atan2(R(1, 0), R(0, 0));
-  } else {
-    roll  = std::atan2(-R(1, 2), R(1, 1));
-    pitch = std::atan2(-R(2, 0), sy);
-    yaw   = 0.0;
-  }
-  constexpr double rad2deg = 180.0 / M_PI;
-  return {roll * rad2deg, pitch * rad2deg, yaw * rad2deg};
 }
 
 Eigen::Matrix4d ExtrinsicCalibrationNode::buildExtrinsicMatrix(
