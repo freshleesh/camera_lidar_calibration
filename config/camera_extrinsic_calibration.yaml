@@ -1,0 +1,8 @@
+extrinsic_calibration_by_hand:
+  ros__parameters:
+    extrinsic.translation.x: 0.006253
+    extrinsic.translation.y: 0.000000
+    extrinsic.translation.z: -0.200000
+    extrinsic.rotation.roll: 122.400000
+    extrinsic.rotation.pitch: -90.000000
+    extrinsic.rotation.yaw: -32.400000

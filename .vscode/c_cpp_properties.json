@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/leesh/creating_autonomous_car_ws/install/f110_msgs/include/**",
+        "/home/leesh/ifac/creating_autonomous_car/install/livox_ros_driver2/include/**",
+        "/home/leesh/ifac/creating_autonomous_car/install/f110_msgs/include/**",
+        "/home/leesh/ifac/creating_autonomous_car/install/camera_lidar_calibration/include/**",
+        "/opt/ros/jazzy/include/**",
+        "/home/leesh/ifac/creating_autonomous_car/perception/camera_lidar_calibration/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ros2",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++17"
+    }
+  ],
+  "version": 4
+}
